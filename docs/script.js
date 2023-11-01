@@ -2,10 +2,66 @@
 let defQRVal = `${schema}://${window.document.location.host}${window.document.location.pathname}`;
 const zero_uuid = "00000000-0000-0000-0000-000000000000";
 let ls_uuid = "no-storage";
+const smNone = "none";
+const smAutoSend = "auto-send";
+let scannerMode = smNone;
+let sendUrl;
 const ovrHidden = "hidden";
 const ovrQRShow = "qr-show";
 const ovrQRCam = "qr-cam";
+const ovrQRConfig = "qr-cfg";
 let ovrMode = ovrHidden;
+let webSocket;
+
+const wsWeakSend = (data) => {
+  let dataStr = JSON.stringify(data);
+  if (webSocket.readyState === WebSocket.OPEN) {
+    webSocket.send(dataStr);
+  } else {
+    logger.error("WS not open");
+  }
+};
+
+const openWs = () => {
+  if (webSocket) {
+    console.log("Closing previous socket");
+    webSocket.close(3001);
+  }
+  webSocket = new WebSocket(sendUrl);
+  webSocket.onopen = function (e) {
+    if (elStatus) {
+      elStatus.innerHTML = "WS connected";
+      elStatus.style.backgroundColor = "#afa";
+    }
+  };
+  webSocket.onclose = function (e) {
+    if (elStatus) {
+      elStatus.innerHTML = "WS NOT connected";
+      elStatus.style.backgroundColor = "#faa";
+    }
+    setTimeout(openWs, 2000);
+  };
+
+  webSocket.onerror = function (err) {
+    if (elStatus) {
+      elStatus.innerHTML = "WS error";
+      elStatus.style.backgroundColor = "#faa";
+    }
+  };
+  webSocket.onmessage = async (event) => {
+    let eventData = await event.data.text();
+    try {
+      const data = JSON.parse(eventData);
+      if (data && data.name) {
+        console.debug(data.name);
+      } else {
+        console.error("event w/o .name");
+      }
+    } catch (err) {
+      logger.error(err, event.data);
+    }
+  };
+};
 
 function uuidv4() {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
@@ -85,7 +141,7 @@ const onLoad = (event) => {
   const butShow = document.getElementById("butShow");
   const butScan = document.getElementById("butScan");
   const butShare = document.getElementById("butShare");
-  const butConnect = document.getElementById("butConnect");
+  const butConfig = document.getElementById("butConfig");
   const elOvrDiv = document.getElementById("overlay");
   // ---
   const html5QrcodeScanner = new Html5Qrcode("QRCamDiv");
@@ -130,13 +186,56 @@ const onLoad = (event) => {
   }
   function onScanSuccess(decodedText, decodedResult) {
     if (decodedText !== window.lastResult) {
-      console.log(decodedResult);
+      console.debug(decodedResult);
       try {
         defQRVal = decodedResult.decodedText;
-        console.debug(defQRVal);
         elDialog.innerText = decodedResult.decodedText;
         adata = JSON.parse(decodedResult.decodedText);
         console.debug(adata);
+        if (ovrMode === ovrQRConfig) {
+          if (adata["mode"]) {
+            if (adata["mode"] === smAutoSend) {
+              scannerMode = smNone;
+              if (adata["url"] && adata["url"] !== "") {
+                scannerMode = smAutoSend;
+                sendUrl = adata["url"];
+                console.debug(scannerMode, sendUrl);
+                if (sendUrl.startsWith("wss://")) {
+                  openWs();
+                }
+              } else {
+                console.error("no url");
+              }
+            } else {
+              console.error(`unknown mode ${adata["mode"]}`);
+            }
+          } else {
+            console.error("no mode");
+          }
+        } else {
+          if (scannerMode === smAutoSend) {
+            let dataOut = { id: ls_uuid, data: adata };
+            console.debug(scannerMode, dataOut);
+            if (sendUrl.startsWith("wss://")) {
+              console.debug("using WS");
+              wsWeakSend(dataOut);
+            } else if (sendUrl.startsWith("https://")) {
+              console.debug("using json HTTPS post");
+              (async () => {
+                const rawResponse = await fetch(sendUrl, {
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(dataOut),
+                });
+                const content = await rawResponse.json();
+                console.log(content);
+              })();
+            }
+          }
+        }
       } catch (err) {
         console.error(err.message);
       }
@@ -158,12 +257,13 @@ const onLoad = (event) => {
     ovrMode = ovrHidden;
   }
   function onScanFailure(error) {
+    // the scanner is failing periodically
     // console.warn(`Code scan error = ${error}`);
   }
-  function startScan() {
+  function startScan(qrScanMode) {
     elOvrDiv.style.display = "flex";
     elQRCamDiv.style.display = "flex";
-    ovrMode = ovrQRCam;
+    ovrMode = qrScanMode;
     html5QrcodeScanner.start(
       { facingMode: "environment" },
       configQr,
@@ -171,37 +271,28 @@ const onLoad = (event) => {
       onScanFailure
     );
   }
-  // function toggleScan(event) {
-  //   if (html5QrcodeScanner && html5QrcodeScanner.isScanning) {
-  //     console.log("stop");
-  //     stopScan();
-  //   } else {
-  //     console.log("start");
-  //     startScan();
-  //   }
-  // }
-  const onScan = (event) => {
-    event.preventDefault();
-    // log("scan");
-    // toggleScan();
-    startScan();
-  };
   const onShow = (event) => {
     event.preventDefault();
-    // log("show");
     makeQRCode();
   };
-  butScan.addEventListener("click", onScan);
+  butScan.addEventListener("click", () => {
+    startScan(ovrQRCam);
+  });
+  butShow.addEventListener("click", onShow);
+  butConfig.addEventListener("click", () => {
+    startScan(ovrQRConfig);
+  });
   elOvrDiv.addEventListener("click", function () {
     if (ovrMode === ovrQRCam) {
       stopScan();
     } else if (ovrMode === ovrQRShow) {
       makeQRCode();
+    } else if (ovrMode === ovrQRConfig) {
+      stopScan();
     } else {
       console.debug(ovrMode);
     }
   });
-  butShow.addEventListener("click", onShow);
 };
 
 window.addEventListener("load", onLoad);
