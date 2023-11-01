@@ -135,11 +135,12 @@ const onLoad = (event) => {
       console.log(decodedResult);
       try {
         defQRVal = decodedResult.decodedText;
+        console.debug(defQRVal);
         elDialog.innerText = decodedResult.decodedText;
         adata = JSON.parse(decodedResult.decodedText);
         console.debug(adata);
       } catch (err) {
-        console.error(err);
+        console.error(err.message);
       }
       stopScan();
     }
