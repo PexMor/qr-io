@@ -33,20 +33,16 @@ p {
   background: rgb(66, 184, 221) !important;
 }
 
-#QRImg,
-#QRVal,
-#QRCam {
+#QRImgDiv,
+#QRValDiv,
+#QRCamDiv {
   display: none;
-  /* vertical-align: middle;
-  text-align: center;
-  align-items: center;
-  align-content: center;
-  align-self: auto;
-  text-align: center; */
 }
 
-#QRImg {
-  padding: 2em;
+#QRImgDiv svg {
+  width: 100%;
+  height: 100%;
+  color: black;
 }
 
 .notif-in {

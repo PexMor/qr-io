@@ -86,12 +86,13 @@ const onLoad = (event) => {
   const butScan = document.getElementById("butScan");
   const butShare = document.getElementById("butShare");
   const butConnect = document.getElementById("butConnect");
-  const elOvr = document.getElementById("overlay");
+  const elOvrDiv = document.getElementById("overlay");
   // ---
-  const html5QrcodeScanner = new Html5Qrcode("QRCam");
-  const elQRCam = document.getElementById("QRCam");
+  const html5QrcodeScanner = new Html5Qrcode("QRCamDiv");
+  const elQRCamDiv = document.getElementById("QRCamDiv");
+  const elQRImgDiv = document.getElementById("QRImgDiv");
   const elQRImg = document.getElementById("QRImg");
-  const elQRVal = document.getElementById("QRVal");
+  const elQRValDiv = document.getElementById("QRValDiv");
   // ---
   const elNotif = document.getElementById("notif");
   const elDialog = document.getElementById("dialog");
@@ -110,23 +111,20 @@ const onLoad = (event) => {
     el_val.innerHTML = url;
   }
   function makeQRCode() {
-    url = defQRVal;
     if (ovrMode === ovrHidden) {
-      if (typeof qrcode !== "undefined") {
-        qrcode.clear();
-      }
-      elOvr.style.display = "block";
-      elQRImg.style.display = "block";
-      elQRVal.style.display = "block";
-      insert_qr(url, elQRImg, elQRVal);
+      elOvrDiv.style.display = "block";
+      elQRImgDiv.style.display = "block";
+      elQRValDiv.style.display = "block";
+      const svg = makeQRSVG(defQRVal);
+      console.debug(defQRVal, svg);
+      elQRImgDiv.innerHTML = svg;
+      elQRValDiv.innerText = defQRVal;
       ovrMode = ovrQRShow;
     } else if (ovrMode === ovrQRShow) {
-      elOvr.style.display = "none";
-      elQRImg.style.display = "none";
-      elQRVal.style.display = "none";
-      if (typeof qrcode !== "undefined") {
-        qrcode.clear();
-      }
+      elOvrDiv.style.display = "none";
+      elQRImgDiv.style.display = "none";
+      elQRValDiv.style.display = "none";
+      elQRImgDiv.innerHTML = "";
       ovrMode = ovrHidden;
     }
   }
@@ -151,20 +149,20 @@ const onLoad = (event) => {
         .stop()
         .then((ignore) => {
           console.debug("stopped qr scanner");
-          elQRCam.style.display = "none";
+          elQRCamDiv.style.display = "none";
         })
         .catch((err) => {
           console.log(err);
         });
-    elOvr.style.display = "none";
+    elOvrDiv.style.display = "none";
     ovrMode = ovrHidden;
   }
   function onScanFailure(error) {
     // console.warn(`Code scan error = ${error}`);
   }
   function startScan() {
-    elOvr.style.display = "flex";
-    elQRCam.style.display = "flex";
+    elOvrDiv.style.display = "flex";
+    elQRCamDiv.style.display = "flex";
     ovrMode = ovrQRCam;
     html5QrcodeScanner.start(
       { facingMode: "environment" },
@@ -194,7 +192,7 @@ const onLoad = (event) => {
     makeQRCode();
   };
   butScan.addEventListener("click", onScan);
-  elOvr.addEventListener("click", function () {
+  elOvrDiv.addEventListener("click", function () {
     if (ovrMode === ovrQRCam) {
       stopScan();
     } else if (ovrMode === ovrQRShow) {

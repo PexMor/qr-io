@@ -35,14 +35,26 @@
     </div>
     <div id="overlay">
       <div id="mid-div">
-        <div id="QRCam"></div>
-        <div id="QRImg"></div>
-        <div id="QRVal"></div>
+        <div id="QRCamDiv"></div>
+        <div id="QRImgDiv"></div>
+        <div id="QRValDiv"></div>
       </div>
     </div>
     <script src="html5-qrcode.min.js"></script>
-    <script src="qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.2/base64.min.js"></script>
+    <script type="module">
+      import QrCode from "https://danielgjackson.github.io/qrcodejs/qrcode.mjs";
+      window.makeQRSVG = (data) => {
+        const matrix = QrCode.generate(data);
+        const svg = QrCode.render("svg", matrix);
+        let svgLines = svg.split(/\r?\n/);
+        svgLines = svgLines.slice(1);
+        const svgPatched = svgLines.join("\n");
+        // .replace("currentColor", "black");
+        // console.log(svgLines, xxx);
+        return svgPatched;
+      };
+    </script>
     <script src="script.js"></script>
   </body>
 </html>
