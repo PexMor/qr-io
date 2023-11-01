@@ -1,0 +1,120 @@
+@import url(https://fonts.googleapis.com/css?family=Share+Tech+Mono);
+
+body,
+p {
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  align-items: center;
+}
+
+.button-green,
+.button-red,
+.button-orange,
+.button-blue {
+  color: white;
+  border-radius: 4px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.button-green {
+  background: rgb(28, 184, 65) !important;
+}
+
+.button-red {
+  background: rgb(202, 60, 60) !important;
+}
+
+.button-orange {
+  background: rgb(223, 117, 20) !important;
+}
+
+.button-blue {
+  background: rgb(66, 184, 221) !important;
+}
+
+#QRImg,
+#QRVal,
+#QRCam {
+  display: none;
+  /* vertical-align: middle;
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  align-self: auto;
+  text-align: center; */
+}
+
+#QRImg {
+  padding: 2em;
+}
+
+.notif-in {
+  animation: movein 0.75s ease forwards;
+}
+
+.notif-out {
+  animation: moveout 1s ease forwards;
+}
+#notif-cont {
+  text-align: center;
+  z-index: 25;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+#notif {
+  display: inline-flex;
+  background: #70c48f;
+  color: white;
+  border-radius: 0.3em;
+  font-size: 18px;
+  position: relative;
+  top: -200px;
+  z-index: 30;
+  padding: 1em;
+}
+
+@keyframes movein {
+  from {
+    top: -200px;
+  }
+  to {
+    top: 0.5em;
+  }
+}
+
+@keyframes moveout {
+  from {
+    top: 0.5em;
+  }
+  to {
+    top: -200px;
+  }
+}
+
+#overlay {
+  z-index: 10;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  vertical-align: middle;
+  background-color: rgba(255, 255, 255, 0.85);
+  /* border: 1px dotted red; */
+}
+#mid-div {
+  position: relative;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  vertical-align: middle;
+  background-color: rgba(255, 255, 255, 0.85);
+  display: inline-block;
+}

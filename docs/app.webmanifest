@@ -1,0 +1,22 @@
+{
+  "name": "QR i/o",
+  "short_name": "QR i/o",
+  "description": "QR code read, write and share",
+  "start_url": ".",
+  "id": "qr-io",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "images/icon.png",
+      "sizes": "520x520",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "installs_allowed_from": ["*"],
+  "default_locale": "en"
+}
