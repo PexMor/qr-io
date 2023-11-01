@@ -195,9 +195,9 @@ const onLoad = (event) => {
       try {
         defQRVal = decodedResult.decodedText;
         elDialog.innerText = decodedResult.decodedText;
-        adata = JSON.parse(decodedResult.decodedText);
-        console.debug(adata);
         if (ovrMode === ovrQRConfig) {
+          const adata = JSON.parse(decodedResult.decodedText);
+          console.debug(adata);
           if (adata["mode"]) {
             if (adata["mode"] === smAutoSend) {
               scannerMode = smNone;
@@ -219,10 +219,10 @@ const onLoad = (event) => {
           }
         } else {
           if (scannerMode === smAutoSend) {
-            let dataOut = { id: ls_uuid, data: adata };
+            let dataOut = { id: ls_uuid, data: decodedResult.decodedText };
             console.debug(scannerMode, dataOut);
             if (sendUrl.startsWith("wss://")) {
-              console.debug("using WS");
+              console.debug("using WS", dataOut);
               wsWeakSend(dataOut);
             } else if (sendUrl.startsWith("https://")) {
               console.debug("using json HTTPS post");
