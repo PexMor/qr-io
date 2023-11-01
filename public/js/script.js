@@ -41,9 +41,13 @@ const openWs = () => {
   webSocket.onmessage = async (event) => {
     let eventData = await event.data.text();
     try {
-      const data = JSON.parse(eventData);
-      if (elDialog) {
-        elDialog.innerText = JSON.stringify(data.data);
+      console.log(eventData);
+      const data0 = JSON.parse(eventData);
+      console.log(data0);
+      const data = JSON.parse(data0);
+      console.log(data);
+      if (elDialog && data.data) {
+        elDialog.innerText = data.data;
       } else {
         console.debug(data);
       }
