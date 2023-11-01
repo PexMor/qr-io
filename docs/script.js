@@ -12,6 +12,7 @@ const ovrQRCam = "qr-cam";
 const ovrQRConfig = "qr-cfg";
 let ovrMode = ovrHidden;
 let webSocket;
+let elStatus;
 
 const wsWeakSend = (data) => {
   let dataStr = JSON.stringify(data);
@@ -152,6 +153,7 @@ const onLoad = (event) => {
   // ---
   const elNotif = document.getElementById("notif");
   const elDialog = document.getElementById("dialog");
+  elStatus = document.getElementById("status");
   // ====
   function insert_qr(url, el_qr, el_val) {
     if (typeof qrcode !== "undefined") {

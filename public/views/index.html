@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" href="docs/images/icon.png" />
+    <link rel="icon" type="image/png" href="docs/images/icon.png" />
+    <meta name="theme-color" content="#DD5939" />
+    <meta name="description" content="QR code read, write and share" />
+    <title>QR i/o</title>
+    <link rel="stylesheet" href="docs/style.css" />
+    <link
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+      integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <header>
+      <h1 id="label">QR i/o</h1>
+    </header>
+    <main>
+      <div id="buttons">
+        <div id="dialog"></div>
+        <h2>QR App</h2>
+        <div id="qrApp"></div>
+        <h2>QR Config</h2>
+        <div id="qrConfig"></div>
+      </div>
+    </main>
+    <div id="notif-cont">
+      <div id="notif">notifications should come here</div>
+    </div>
+    <div id="overlay">
+      <div id="mid-div">
+        <div id="QRCamDiv"></div>
+        <div id="QRImgDiv"></div>
+        <div id="QRValDiv"></div>
+      </div>
+    </div>
+    <script src="docs/html5-qrcode.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.2/base64.min.js"></script> -->
+    <script type="module">
+      import QrCode from "https://danielgjackson.github.io/qrcodejs/qrcode.mjs";
+      window.makeQRSVG = (data) => {
+        const matrix = QrCode.generate(data);
+        const svg = QrCode.render("svg", matrix);
+        let svgLines = svg.split(/\r?\n/);
+        // remove comment line from generated svg, ugly hack
+        svgLines = svgLines.slice(1);
+        const svgPatched = svgLines.join("\n");
+        return svgPatched;
+      };
+      const jstr = `{{cfg}}`;
+      console.log(jstr);
+      window.configData = {};
+      try {
+        const cd = JSON.parse(jstr);
+        window.configData = cd;
+      } catch (err) {
+        console.error(err.message);
+      }
+      console.log(window.configData);
+    </script>
+    <script src="js/script.js"></script>
+  </body>
+</html>

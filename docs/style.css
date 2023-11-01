@@ -8,6 +8,13 @@ p {
   align-items: center;
 }
 
+#buttons {
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  display: inline-block;
+}
+
 .button-green,
 .button-red,
 .button-orange,
@@ -116,4 +123,13 @@ p {
 }
 #dialog {
   padding: 2em;
+}
+
+#qrApp svg {
+  max-width: 70vw;
+  max-height: 70vh;
+}
+#qrConfig svg {
+  max-width: 70vw;
+  max-height: 70vh;
 }
