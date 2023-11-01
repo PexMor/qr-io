@@ -133,3 +133,25 @@ p {
   max-width: 70vw;
   max-height: 70vh;
 }
+input[type="file"] {
+  margin: 1em;
+}
+input[type="file"]::file-selector-button {
+  border: none;
+  background: #084cdf;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #0d45a5;
+}
+
+#imgPreview {
+  max-width: 80vw;
+  max-height: 90vh;
+  margin: 1em;
+}

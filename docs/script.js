@@ -154,10 +154,14 @@ const onLoad = (event) => {
   const elQRImgDiv = document.getElementById("QRImgDiv");
   const elQRImg = document.getElementById("QRImg");
   const elQRValDiv = document.getElementById("QRValDiv");
+  const butClear = document.getElementById("butClear");
+
   // ---
   const elNotif = document.getElementById("notif");
+  const elImgFile = document.getElementById("imgfile");
   elDialog = document.getElementById("dialog");
   elStatus = document.getElementById("status");
+  elTa = document.getElementById("toshare");
   // ====
   function insert_qr(url, el_qr, el_val) {
     if (typeof qrcode !== "undefined") {
@@ -177,6 +181,9 @@ const onLoad = (event) => {
       elOvrDiv.style.display = "block";
       elQRImgDiv.style.display = "block";
       elQRValDiv.style.display = "block";
+      if (elTa.value !== "") {
+        defQRVal = elTa.value;
+      }
       const svg = makeQRSVG(defQRVal);
       console.debug(defQRVal, svg);
       elQRImgDiv.innerHTML = svg;
@@ -196,6 +203,7 @@ const onLoad = (event) => {
       try {
         defQRVal = decodedResult.decodedText;
         elDialog.innerText = decodedResult.decodedText;
+        elTa.value = decodedResult.decodedText;
         if (ovrMode === ovrQRConfig) {
           const adata = JSON.parse(decodedResult.decodedText);
           console.debug(adata);
@@ -297,6 +305,55 @@ const onLoad = (event) => {
       stopScan();
     } else {
       console.debug(ovrMode);
+    }
+  });
+  elImgFile.addEventListener("change", (event) => {
+    event.preventDefault();
+    const output = document.getElementById("imgPreview");
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function () {
+      URL.revokeObjectURL(output.src); // free memory
+    };
+  });
+  butClear.addEventListener("click", (event) => {
+    event.preventDefault();
+    const output = document.getElementById("imgPreview");
+    output.src = "";
+    elImgFile.value = "";
+  });
+  butShare.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (scannerMode === smAutoSend) {
+      const handleFileLoad = (event) => {
+        // https://stackoverflow.com/questions/16505333/get-the-data-of-uploaded-file-in-javascript
+        let dataOut = {
+          id: ls_uuid,
+          data: "image",
+          bin: event.target.result,
+        };
+        console.debug(scannerMode, dataOut);
+        if (sendUrl.startsWith("wss://")) {
+          console.debug("using WS", dataOut);
+          wsWeakSend(dataOut);
+        } else if (sendUrl.startsWith("https://")) {
+          console.debug("using json HTTPS post");
+          (async () => {
+            const rawResponse = await fetch(sendUrl, {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(dataOut),
+            });
+            const content = await rawResponse.json();
+            console.log(content);
+          })();
+        }
+      };
+      const reader = new FileReader();
+      reader.onload = handleFileLoad;
+      reader.readAsText(elImgFile.files[0]);
     }
   });
 };
