@@ -132,19 +132,14 @@ const onLoad = (event) => {
   }
   function onScanSuccess(decodedText, decodedResult) {
     if (decodedText !== window.lastResult) {
-      const el = document.getElementById("scan_res");
-      if (el) {
-        console.log(decodedResult);
-        try {
-          defQRVal = decodedResult.decodedText;
-          elDialog.innerText = decodedResult.decodedText;
-          adata = JSON.parse(decodedResult.decodedText);
-          console.debug(adata);
-        } catch (err) {
-          console.error(err);
-        }
-      } else {
-        console.error("scan_res not found");
+      console.log(decodedResult);
+      try {
+        defQRVal = decodedResult.decodedText;
+        elDialog.innerText = decodedResult.decodedText;
+        adata = JSON.parse(decodedResult.decodedText);
+        console.debug(adata);
+      } catch (err) {
+        console.error(err);
       }
       stopScan();
     }
