@@ -43,7 +43,7 @@ const openWs = () => {
     try {
       const data = JSON.parse(eventData);
       if (elDialog) {
-        elDialog.innerText = JSON.stringify(data);
+        elDialog.innerText = JSON.stringify(data.data);
       } else {
         console.debug(data);
       }
@@ -59,6 +59,7 @@ const onLoad = () => {
   openWs();
   const elQrApp = document.getElementById("qrApp");
   const elQrConfig = document.getElementById("qrConfig");
+  elDialog = document.getElementById("dialog");
   const appUrl = "https://www.cvut.cz";
   elQrApp.innerHTML =
     makeQRSVG(appUrl) + `<br/><a href="${appUrl}">${appUrl}</a>`;

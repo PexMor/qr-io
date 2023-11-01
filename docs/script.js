@@ -56,8 +56,8 @@ const openWs = () => {
       const data = JSON.parse(eventData);
       console.log(eventData);
       console.debug(data);
-      if (elDialog) {
-        elDialog.innerText = eventData;
+      if (elDialog && data.data) {
+        elDialog.innerText = JSON.stringify(data.data);
       }
     } catch (err) {
       logger.error(err, event.data);
