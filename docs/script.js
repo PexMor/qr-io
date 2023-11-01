@@ -13,6 +13,7 @@ const ovrQRConfig = "qr-cfg";
 let ovrMode = ovrHidden;
 let webSocket;
 let elStatus;
+let elDialog;
 
 const wsWeakSend = (data) => {
   let dataStr = JSON.stringify(data);
@@ -53,10 +54,8 @@ const openWs = () => {
     let eventData = await event.data.text();
     try {
       const data = JSON.parse(eventData);
-      if (data && data.name) {
-        console.debug(data.name);
-      } else {
-        console.error("event w/o .name");
+      if (elDialog) {
+        elDialog.innerText = JSON.stringify(data);
       }
     } catch (err) {
       logger.error(err, event.data);
@@ -152,7 +151,7 @@ const onLoad = (event) => {
   const elQRValDiv = document.getElementById("QRValDiv");
   // ---
   const elNotif = document.getElementById("notif");
-  const elDialog = document.getElementById("dialog");
+  elDialog = document.getElementById("dialog");
   elStatus = document.getElementById("status");
   // ====
   function insert_qr(url, el_qr, el_val) {
