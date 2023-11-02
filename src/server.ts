@@ -18,6 +18,7 @@ import nunjucks from "nunjucks";
 import fs from "fs";
 import path from "path";
 import { homedir } from "os";
+import Multer from "multer";
 
 // const tmpDir = "./tmp";
 const externalUrl = await getNgrokUrl();
@@ -28,6 +29,7 @@ try {
   console.error(err);
 }
 nunjucks.configure("public/views", { autoescape: false });
+const upload = Multer({ dest: tmpDir });
 
 const configUrl = async () => {
   // Configure APP Url
@@ -69,16 +71,32 @@ if (rc_url_set) {
   app.get("/echo", (req, resp) => {
     resp.json(req.body);
   });
-  app.post("/post", (req, resp) => {
-    const destFn = path.join(tmpDir, "save.jpg");
-    fs.writeFile(destFn, req.body.bin, (err) => {
-      if (err) console.log(err);
-      else {
-        logger.debug(
-          `File written successfully ${destFn} (${req.body.bin.length} Bytes)`
-        );
-      }
-    });
+  app.post("/post", upload.single("image"), (req, resp) => {
+    logger.debug(req);
+    logger.debug(req.file);
+    if (req.file) {
+      const destFn = path.join(tmpDir, req.file.originalname);
+      fs.rename(req.file.path, destFn, function (err) {
+        if (err) {
+          console.log("ERROR: " + err);
+        } else {
+          logger.debug(
+            `File written successfully ${destFn} (${req.file?.size} Bytes)`
+          );
+        }
+      });
+    }
+    // logger.debug(req.image);
+    //logger.debug(req.image);//Object.keys(req.body));
+    // const destFn = path.join(tmpDir, "save.jpg");
+    // fs.writeFile(destFn, req.body.bin, (err) => {
+    //   if (err) console.log(err);
+    //   else {
+    //     logger.debug(
+    //       `File written successfully ${destFn} (${req.body.bin.length} Bytes)`
+    //     );
+    //   }
+    // });
     resp.json({ rc: 0, msg: "ok" });
   });
   app.get("/", (req, resp) => {

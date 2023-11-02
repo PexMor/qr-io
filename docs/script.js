@@ -286,6 +286,43 @@ const onLoad = (event) => {
       onScanFailure
     );
   }
+  function shareFce() {
+    const handleFileLoad = (event) => {
+      // https://stackoverflow.com/questions/16505333/get-the-data-of-uploaded-file-in-javascript
+      let dataOut = {
+        id: ls_uuid,
+        data: "image",
+        bin: event.target.result,
+      };
+      console.debug(scannerMode, dataOut);
+      if (sendUrl.startsWith("wss://")) {
+        console.debug("using WS", dataOut);
+        wsWeakSend(dataOut);
+      } else if (sendUrl.startsWith("https://")) {
+        const formData = new FormData();
+        formData.append("image", elImgFile.files[0]);
+        console.debug("using json HTTPS post");
+        (async () => {
+          const rawResponse = await fetch(sendUrl, {
+            method: "POST",
+            // headers: {
+            //   Accept: "application/json",
+            //   "Content-Type": "application/json",
+            // },
+            // body: JSON.stringify(dataOut),
+            body: formData,
+          });
+          const content = await rawResponse.json();
+          console.log(content);
+        })();
+      }
+    };
+    const reader = new FileReader();
+    reader.onload = handleFileLoad;
+    reader.readAsDataURL(elImgFile.files[0]);
+    // reader.readAsArrayBuffer(elImgFile.files[0]);
+  }
+
   const onShow = (event) => {
     event.preventDefault();
     makeQRCode();
@@ -325,36 +362,9 @@ const onLoad = (event) => {
   butShare.addEventListener("click", (event) => {
     event.preventDefault();
     if (scannerMode === smAutoSend) {
-      const handleFileLoad = (event) => {
-        // https://stackoverflow.com/questions/16505333/get-the-data-of-uploaded-file-in-javascript
-        let dataOut = {
-          id: ls_uuid,
-          data: "image",
-          bin: event.target.result,
-        };
-        // console.debug(scannerMode, dataOut);
-        if (sendUrl.startsWith("wss://")) {
-          console.debug("using WS", dataOut);
-          wsWeakSend(dataOut);
-        } else if (sendUrl.startsWith("https://")) {
-          console.debug("using json HTTPS post");
-          (async () => {
-            const rawResponse = await fetch(sendUrl, {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(dataOut),
-            });
-            const content = await rawResponse.json();
-            console.log(content);
-          })();
-        }
-      };
-      const reader = new FileReader();
-      reader.onload = handleFileLoad;
-      reader.readAsArrayBuffer(elImgFile.files[0]);
+      shareFce();
+    } else {
+      shareFce();
     }
   });
 };
