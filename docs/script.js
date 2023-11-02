@@ -149,7 +149,7 @@ const onLoad = (event) => {
   const butConfig = document.getElementById("butConfig");
   const elOvrDiv = document.getElementById("overlay");
   // ---
-  const html5QrcodeScanner = new Html5Qrcode("QRCamDiv");
+  const html5QrcodeScanner = new Html5Qrcode("QRCamDiv"); //, configQr);
   const elQRCamDiv = document.getElementById("QRCamDiv");
   const elQRImgDiv = document.getElementById("QRImgDiv");
   const elQRImg = document.getElementById("QRImg");
@@ -185,7 +185,7 @@ const onLoad = (event) => {
         defQRVal = elTa.value;
       }
       const svg = makeQRSVG(defQRVal);
-      console.debug(defQRVal, svg);
+      // console.debug(defQRVal, svg);
       elQRImgDiv.innerHTML = svg;
       elQRValDiv.innerText = defQRVal;
       ovrMode = ovrQRShow;
@@ -278,6 +278,7 @@ const onLoad = (event) => {
     elOvrDiv.style.display = "flex";
     elQRCamDiv.style.display = "flex";
     ovrMode = qrScanMode;
+    // html5QrcodeScanner.render(onScanSuccess, onScanFailure);
     html5QrcodeScanner.start(
       { facingMode: "environment" },
       configQr,

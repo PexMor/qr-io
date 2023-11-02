@@ -51,6 +51,11 @@ p {
   height: 100%;
   color: black;
 }
+#QRCamDiv {
+  min-width: 400px;
+  min-height: 400px;
+  display: inline-block;
+}
 
 .notif-in {
   animation: movein 0.75s ease forwards;
