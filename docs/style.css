@@ -129,12 +129,15 @@ p {
 #dialog {
   padding: 2em;
 }
-
 #qrApp svg {
   max-width: 70vw;
   max-height: 70vh;
 }
-#qrConfig svg {
+#qrConfigWS svg {
+  max-width: 70vw;
+  max-height: 70vh;
+}
+#qrConfigPost svg {
   max-width: 70vw;
   max-height: 70vh;
 }

@@ -332,7 +332,7 @@ const onLoad = (event) => {
           data: "image",
           bin: event.target.result,
         };
-        console.debug(scannerMode, dataOut);
+        // console.debug(scannerMode, dataOut);
         if (sendUrl.startsWith("wss://")) {
           console.debug("using WS", dataOut);
           wsWeakSend(dataOut);
@@ -354,7 +354,7 @@ const onLoad = (event) => {
       };
       const reader = new FileReader();
       reader.onload = handleFileLoad;
-      reader.readAsText(elImgFile.files[0]);
+      reader.readAsArrayBuffer(elImgFile.files[0]);
     }
   });
 };

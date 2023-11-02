@@ -58,17 +58,42 @@ const openWs = () => {
 };
 
 const onLoad = () => {
-  console.log(window.configData);
-  sendUrl = window.configData.url;
+  console.log(window.configDataWS);
+  sendUrl = window.configDataWS.url;
   openWs();
   const elQrApp = document.getElementById("qrApp");
-  const elQrConfig = document.getElementById("qrConfig");
+  const elQrConfigWS = document.getElementById("qrConfigWS");
+  const elQrConfigPost = document.getElementById("qrConfigPost");
+  const b2d = {
+    butShowPwaQR: "qrApp",
+    butShowWSQR: "qrConfigWS",
+    butShowPostQR: "qrConfigPost",
+  };
+  for (let bn of Object.keys(b2d)) {
+    const el = document.getElementById(bn);
+    const cEl = document.getElementById(b2d[bn]);
+    el.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (cEl.style.display === "none") {
+        cEl.style.display = "block";
+      } else {
+        cEl.style.display = "none";
+      }
+    });
+  }
   elDialog = document.getElementById("dialog");
-  const appUrl = "https://www.cvut.cz";
+
+  const appUrl = "https://pexmor.github.io/qr-io/";
   elQrApp.innerHTML =
     makeQRSVG(appUrl) + `<br/><a href="${appUrl}">${appUrl}</a>`;
-  const strConfigData = JSON.stringify(window.configData);
-  elQrConfig.innerHTML = makeQRSVG(strConfigData) + `<br/>${strConfigData}`;
+  // ---
+  const strConfigDataWs = JSON.stringify(window.configDataWS);
+  elQrConfigWS.innerHTML =
+    makeQRSVG(strConfigDataWs) + `<br/>${strConfigDataWs}`;
+  // ---
+  const strConfigDataPost = JSON.stringify(window.configDataPost);
+  elQrConfigPost.innerHTML =
+    makeQRSVG(strConfigDataPost) + `<br/>${strConfigDataPost}`;
 };
 
 addEventListener("load", onLoad);

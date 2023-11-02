@@ -15,8 +15,18 @@ import { createServer } from "http";
 import bodyParser from "body-parser";
 import { handleUpgrade } from "./webSocket";
 import nunjucks from "nunjucks";
+import fs from "fs";
+import path from "path";
+import { homedir } from "os";
 
+// const tmpDir = "./tmp";
 const externalUrl = await getNgrokUrl();
+const tmpDir = path.join(homedir(), "tmp", "qr-io");
+try {
+  fs.mkdirSync(tmpDir, { recursive: true });
+} catch (err) {
+  console.error(err);
+}
 nunjucks.configure("public/views", { autoescape: false });
 
 const configUrl = async () => {
@@ -43,12 +53,15 @@ if (rc_url_set) {
   const wsUrl = externalUrl.startsWith("https:")
     ? `wss://${exUrl.host}`
     : `ws://${exUrl.host}`;
+  const postUrl = externalUrl.startsWith("https:")
+    ? `https://${exUrl.host}/post`
+    : `http://${exUrl.host}/post`;
 
-  app.use(cors());
+  app.use(cors({ credentials: true, origin: true }));
   // morgan_logger: combined | dev
   app.use(morgan_logger("combined"));
-  app.use(express.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.json({ limit: "50mb" }));
+  app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
   app.use(express.static("public"));
 
   app.use("/docs", express.static("docs"));
@@ -56,11 +69,27 @@ if (rc_url_set) {
   app.get("/echo", (req, resp) => {
     resp.json(req.body);
   });
-  app.get("/", (req, resp) => {
-    const dataCfg = { mode: "auto-send", url: wsUrl };
-    const html = nunjucks.render("index.html", {
-      cfg: JSON.stringify(dataCfg),
+  app.post("/post", (req, resp) => {
+    const destFn = path.join(tmpDir, "save.jpg");
+    fs.writeFile(destFn, req.body.bin, (err) => {
+      if (err) console.log(err);
+      else {
+        logger.debug(
+          `File written successfully ${destFn} (${req.body.bin.length} Bytes)`
+        );
+      }
     });
+    resp.json({ rc: 0, msg: "ok" });
+  });
+  app.get("/", (req, resp) => {
+    const dataCfgWS = { mode: "auto-send", url: wsUrl };
+    const dataCfgPost = { mode: "auto-send", url: postUrl };
+    const subst = {
+      cfgWS: JSON.stringify(dataCfgWS),
+      cfgPost: JSON.stringify(dataCfgPost),
+    };
+    logger.debug(subst);
+    const html = nunjucks.render("index.html", subst);
     resp.send(html);
   });
   app.all("*", function (req, res) {
