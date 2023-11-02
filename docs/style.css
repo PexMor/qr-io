@@ -163,3 +163,9 @@ input[type="file"]::file-selector-button:hover {
   max-height: 90vh;
   margin: 1em;
 }
+#textOutput {
+  text-align: left;
+  padding: 2em;
+  border: 1px dotted pink;
+  display: inline-block;
+}
