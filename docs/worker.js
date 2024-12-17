@@ -1,18 +1,16 @@
-const version = "1.0.1";
-const cts = "Tue Oct 31 18:39:51 UTC 2023";
-const CACHE_NAME = "pers-agent";
+const version = "1.0.2";
+const cts = "Tue Dec 17 20:01:01 CET 2024";
+const CACHE_NAME = "qr-io";
 const toCache = [
   ".",
   "html5-qrcode.min.js",
-  "images/icon-512.png",
-  "images/icon-512_bg.png",
-  "images/icon-512_bgp.png",
+  "images/icon.png",
   "index.html",
   "namegen.js",
   "qrcode.min.js",
   "script.js",
-  "site.css",
-  "twilio.min.js",
+  "style.css",
+  "tesseract.js",
 ]; // toCache
 self.addEventListener("install", function (event) {
   // console.log("used to register the service worker");
