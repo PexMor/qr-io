@@ -25,17 +25,19 @@
       <button id="butShow" class="button-red pure-button">Show</button>
       <button id="butShare" class="button-orange pure-button">Share</button>
       <button id="butConfig" class="button-blue pure-button">Config</button>
-      <div id="dialog"></div>
-      <div id="form">
-        <form class="pure-form" onsubmit="return false">
-          <textarea id="toshare" class="pure-input-1" rows="10" placeholder="text to share..."></textarea>
-          <input id="imgfile" type="file" class="pure-input-1" accept="image/*" />
-          <button id="butClear" class="button-blue pure-button">Clear</button>
-          <br />
-          <img id="imgPreview" />
-        </form>
-      </div>
     </div>
+    <div id="dialog"></div>
+    <div id="form">
+      <form class="pure-form" onsubmit="return false">
+        <textarea id="toshare" class="pure-input-1" rows="10" placeholder="text to share..."></textarea>
+        <input id="imgfile" type="file" class="pure-input-1" accept="image/*" />
+        <button id="butClear" class="button-blue pure-button">Clear</button>
+        <button id="butSave" class="button-green pure-button">Save</button>
+        <br />
+        <img id="imgPreview" />
+      </form>
+    </div>
+    <div id="saved-data"></div>
   </main>
   <div id="notif-cont">
     <div id="notif">notifications should come here</div>

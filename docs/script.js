@@ -155,7 +155,7 @@ const onLoad = (event) => {
   const elQRImg = document.getElementById("QRImg");
   const elQRValDiv = document.getElementById("QRValDiv");
   const butClear = document.getElementById("butClear");
-
+  const butSave = document.getElementById("butSave");
   // ---
   const elNotif = document.getElementById("notif");
   const elImgFile = document.getElementById("imgfile");
@@ -322,6 +322,41 @@ const onLoad = (event) => {
     reader.readAsDataURL(elImgFile.files[0]);
     // reader.readAsArrayBuffer(elImgFile.files[0]);
   }
+  const delItem = (id) => {
+    // get current content of data array in local storage
+    let dataArr = JSON.parse(window.localStorage.getItem("data")) || [];
+    // remove the item from the array
+    dataArr.splice(id, 1);
+    // save the new data array to local storage
+    window.localStorage.setItem("data", JSON.stringify(dataArr));
+    showData();
+  };
+  window.delItem = delItem;
+  const showData = () => {
+    // get current content of data array in local storage
+    let dataArr = JSON.parse(window.localStorage.getItem("data")) || [];
+    // convert the array to html buttons
+    let html = "";
+    for (let i = 0; i < dataArr.length; i++) {
+      html += `<div class="but-row"><button onclick="return delItem(${i})">&times;</button><button onclick="elTa.value='${dataArr[i]}'" class="pure-button div-ellipsis">${dataArr[i]}</button></div>`;
+    }
+    const elSDiv = document.getElementById("saved-data");
+    if (elSDiv) {
+      elSDiv.innerHTML = html;
+    }
+  };
+  showData();
+  const saveData = () => {
+    // get the data from the textarea
+    const data = elTa.value;
+    // get current content of data array in local storage
+    let dataArr = JSON.parse(window.localStorage.getItem("data")) || [];
+    // add the new data to the array
+    dataArr.push(data);
+    // save the new data array to local storage
+    window.localStorage.setItem("data", JSON.stringify(dataArr));
+    showData();
+  };
 
   const onShow = (event) => {
     event.preventDefault();
@@ -358,6 +393,10 @@ const onLoad = (event) => {
     const output = document.getElementById("imgPreview");
     output.src = "";
     elImgFile.value = "";
+  });
+  butSave.addEventListener("click", (event) => {
+    event.preventDefault();
+    saveData();
   });
   butShare.addEventListener("click", (event) => {
     event.preventDefault();

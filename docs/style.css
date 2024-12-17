@@ -6,6 +6,7 @@ p {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   align-items: center;
+  margin: 0;
 }
 
 #buttons {
@@ -50,6 +51,7 @@ p {
   width: 100%;
   height: 100%;
   color: black;
+  border: 1px dotted red;
 }
 #QRCamDiv {
   min-width: 400px;
@@ -168,4 +170,25 @@ input[type="file"]::file-selector-button:hover {
   padding: 2em;
   border: 1px dotted pink;
   display: inline-block;
+}
+.div-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 80%;
+  align-self: center;
+  margin: 0.5em;
+}
+textarea {
+  width: 80% !important;
+  max-width: 80% !important;
+}
+main,
+form,
+.form {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
 }
