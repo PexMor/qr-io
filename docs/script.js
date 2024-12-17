@@ -115,6 +115,13 @@ const refreshStorage = () => {
 };
 refreshStorage();
 
+let config = localStorage.getItem("qr-config");
+if (config) {
+  let adata = JSON.parse(config);
+  console.debug(adata);
+  saveConfig(adata);
+}
+
 const onHashChange = (event) => {
   // place holder
 };
@@ -148,6 +155,7 @@ const onLoad = (event) => {
   const butShare = document.getElementById("butShare");
   const butConfig = document.getElementById("butConfig");
   const elOvrDiv = document.getElementById("overlay");
+  const elOvrDiv2 = document.getElementById("overlay2");
   // ---
   const html5QrcodeScanner = new Html5Qrcode("QRCamDiv"); //, configQr);
   const elQRCamDiv = document.getElementById("QRCamDiv");
@@ -209,25 +217,11 @@ const onLoad = (event) => {
         if (ovrMode === ovrQRConfig) {
           const adata = JSON.parse(decodedResult.decodedText);
           console.debug(adata);
-          if (adata["mode"]) {
-            if (adata["mode"] === smAutoSend) {
-              scannerMode = smNone;
-              if (adata["url"] && adata["url"] !== "") {
-                scannerMode = smAutoSend;
-                sendUrl = adata["url"];
-                console.debug(scannerMode, sendUrl);
-                if (sendUrl.startsWith("wss://")) {
-                  openWs();
-                }
-              } else {
-                console.error("no url");
-              }
-            } else {
-              console.error(`unknown mode ${adata["mode"]}`);
-            }
-          } else {
-            console.error("no mode");
-          }
+          // save configuration data to local storage
+          // {"mode":"auto-send","url":"https://<random-url>.ngrok.io"}
+          // {"mode":"auto-send","url":"wss://<random-url>.ngrok.io"}
+          localStorage.setItem("qr-config", JSON.stringify(adata));
+          saveConfig(adata);
         } else {
           if (scannerMode === smAutoSend) {
             let dataOut = { id: ls_uuid, data: decodedResult.decodedText };
@@ -258,6 +252,29 @@ const onLoad = (event) => {
       stopScan();
     }
   }
+  function saveConfig(adata) {
+    if (adata["mode"]) {
+      if (adata["mode"] === smAutoSend) {
+        scannerMode = smNone;
+        if (adata["url"] && adata["url"] !== "") {
+          scannerMode = smAutoSend;
+          sendUrl = adata["url"];
+          console.debug(scannerMode, sendUrl);
+          if (sendUrl.startsWith("wss://")) {
+            openWs();
+          }
+        } else {
+          console.error("no url");
+        }
+      } else {
+        console.error(`unknown mode ${adata["mode"]}`);
+      }
+    } else {
+      console.error("no mode - config cleanup");
+      localStorage.removeItem("qr-config");
+    }
+  }
+
   function stopScan() {
     if (html5QrcodeScanner.isScanning)
       html5QrcodeScanner
@@ -269,7 +286,7 @@ const onLoad = (event) => {
         .catch((err) => {
           console.log(err);
         });
-    elOvrDiv.style.display = "none";
+    elOvrDiv2.style.display = "none";
     ovrMode = ovrHidden;
   }
   function onScanFailure(error) {
@@ -277,8 +294,8 @@ const onLoad = (event) => {
     // console.warn(`Code scan error = ${error}`);
   }
   function startScan(qrScanMode) {
-    elOvrDiv.style.display = "flex";
-    elQRCamDiv.style.display = "flex";
+    elOvrDiv2.style.display = "block";
+    elQRCamDiv.style.display = "block";
     ovrMode = qrScanMode;
     // html5QrcodeScanner.render(onScanSuccess, onScanFailure);
     html5QrcodeScanner.start(
@@ -372,6 +389,17 @@ const onLoad = (event) => {
     startScan(ovrQRConfig);
   });
   elOvrDiv.addEventListener("click", function () {
+    if (ovrMode === ovrQRCam) {
+      stopScan();
+    } else if (ovrMode === ovrQRShow) {
+      makeQRCode();
+    } else if (ovrMode === ovrQRConfig) {
+      stopScan();
+    } else {
+      console.debug(ovrMode);
+    }
+  });
+  elOvrDiv2.addEventListener("click", function () {
     if (ovrMode === ovrQRCam) {
       stopScan();
     } else if (ovrMode === ovrQRShow) {

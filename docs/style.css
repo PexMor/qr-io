@@ -51,7 +51,6 @@ p {
   width: 100%;
   height: 100%;
   color: black;
-  border: 1px dotted red;
 }
 #QRCamDiv {
   min-width: 400px;
@@ -104,7 +103,8 @@ p {
   }
 }
 
-#overlay {
+#overlay,
+#overlay2 {
   z-index: 10;
   position: absolute;
   left: 0;
@@ -116,8 +116,7 @@ p {
   align-content: center;
   text-align: center;
   vertical-align: middle;
-  background-color: rgba(255, 255, 255, 0.85);
-  /* border: 1px dotted red; */
+  background-color: rgba(200, 200, 200, 0.9);
 }
 #mid-div {
   position: relative;
@@ -125,7 +124,7 @@ p {
   align-content: center;
   text-align: center;
   vertical-align: middle;
-  background-color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 255, 255, 1);
   display: inline-block;
 }
 #dialog {
