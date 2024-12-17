@@ -43,8 +43,8 @@ class SegmentNumeric {
   static CHARSET = "0123456789";
 
   static canEncode(text) {
-    return true;
-    // return [...text].every(c => SegmentNumeric.CHARSET.includes(c));
+    // return true;
+    return [...text].every((c) => SegmentNumeric.CHARSET.includes(c));
   }
 
   static payloadSize(text) {
@@ -69,7 +69,7 @@ class SegmentNumeric {
   }
 
   static encode(bitBuffer, version, text) {
-    const data = [...text]; //.map((c) => c.charCodeAt(0) - 0x30);
+    const data = [...text].map((c) => c.charCodeAt(0) - 0x30);
     bitBuffer.append(SegmentNumeric.MODE, Segment.MODE_BITS);
     bitBuffer.append(data.length, SegmentNumeric.countSize(version));
     for (let i = 0; i < data.length; ) {
@@ -143,9 +143,10 @@ class SegmentEightBit {
   static MODE = 0x04;
 
   static canEncode(text) {
-    return [...text].every(
-      (c) => c.charCodeAt(0) >= 0x00 && c.charCodeAt(0) <= 0xff
-    );
+    return true;
+    // return [...text].every(
+    //   (c) => c.charCodeAt(0) >= 0x00 && c.charCodeAt(0) <= 0xff
+    // );
   }
 
   static payloadSize(text) {
