@@ -184,7 +184,9 @@ const onLoad = (event) => {
       if (elTa.value !== "") {
         defQRVal = elTa.value;
       }
-      const svg = makeQRSVG(defQRVal);
+      // convert the string into UTF-8 bytes
+      const theVal = new TextEncoder().encode(defQRVal);
+      const svg = makeQRSVG(theVal);
       // console.debug(defQRVal, svg);
       elQRImgDiv.innerHTML = svg;
       elQRValDiv.innerText = defQRVal;
@@ -393,6 +395,7 @@ const onLoad = (event) => {
     const output = document.getElementById("imgPreview");
     output.src = "";
     elImgFile.value = "";
+    elTa.value = "";
   });
   butSave.addEventListener("click", (event) => {
     event.preventDefault();
