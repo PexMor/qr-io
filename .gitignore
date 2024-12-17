@@ -1,5 +1,7 @@
+.DS_Store
+.mypy_cache/
+__pycache__/
+dist/
 node_modules/
 tmp-*
 tmp/
-dist/
-.DS_Store

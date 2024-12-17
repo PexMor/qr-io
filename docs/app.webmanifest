@@ -1,7 +1,7 @@
 {
   "name": "QR i/o",
   "short_name": "QR i/o",
-  "description": "QR code read, write and share",
+  "description": "QR: read, write and share",
   "start_url": ".",
   "id": "qr-io",
   "display": "standalone",
@@ -12,7 +12,7 @@
   "icons": [
     {
       "src": "images/icon.png",
-      "sizes": "520x520",
+      "sizes": "280x280",
       "type": "image/png",
       "purpose": "any maskable"
     }
