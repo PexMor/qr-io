@@ -4,6 +4,8 @@ Minimal app for reproducing and sharing QR codes.
 
 <https://pexmor.github.io/qr-io/> the app Git Pages hosted.
 
+**TL;DR:** `python -mhttp.server -d docs 8088`
+
 ## Use cases
 
 The app has two foreseen usages simple (without server) and
