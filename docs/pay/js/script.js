@@ -512,10 +512,17 @@ const onLoad = (event) => {
     // get the value from local storage
     item.value = localStorage.getItem(item.id);
     // add an event listener to each item
+    item.addEventListener("keydown", (event) => {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    });
     item.addEventListener("keyup", (event) => {
-      event.preventDefault();
       // if the key pressed is enter
       if (event.keyCode === 13) {
+        event.preventDefault();
+        event.stopPropagation();
         // call the function to generate the QR code
         makeQRCode();
       } else {
