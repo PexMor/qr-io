@@ -59,7 +59,7 @@ yarn server
 
 ## Sub licenses
 
-This simple but usabe QR i/o project would not be possible without other libraries. These used in browser are listed below. There some other used by server to check those please have a look at [package.json](package.json).
+This simple but usabe QR I/O project would not be possible without other libraries. These used in browser are listed below. There some other used by server to check those please have a look at [package.json](package.json).
 
 | Part              | Link                                         | License                                                                        |
 | ----------------- | -------------------------------------------- | ------------------------------------------------------------------------------ |

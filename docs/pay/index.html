@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="app.webmanifest" />
+  <link rel="apple-touch-icon" href="images/icon.png" />
+  <link rel="icon" type="image/png" href="images/icon.png" />
+  <meta name="theme-color" content="#DD5939" />
+  <meta name="description" content="Payment QR" />
+  <title>Pay QR</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+    integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous" />
+</head>
+
+<body>
+  <header>
+    <h1 id="label">QR Payments</h1>
+  </header>
+  <main>
+    <div id="buttons">
+      <button id="butScan" class="button-green pure-button">Scan</button>
+      <button id="butShowQR" class="button-blue pure-button">Show</button>
+      <!-- <button id="butShare" class="button-orange pure-button">Share</button>
+      <button id="butConfig" class="button-blue pure-button">Config</button> -->
+    </div>
+    <div id="dialog"></div>
+    <div id="form">
+      <form class="pure-form" onsubmit="return false">
+        <!-- <textarea id="toshare" class="pure-input-1" rows="10" placeholder="text to share..."></textarea> -->
+        <fieldset>
+          <legend>Payment Data</legend>
+          <div class="simple-grid">
+            <label for="iban">IBAN</label>
+            <input id="iban" type="text" class="spay-input pure-input" placeholder="CZ6508000000000192000145399" />
+            <button id="butIban" tabindex="-1" class="spay-clear button-red pure-button">x</button>
+            <label for="amount">Amount</label>
+            <input id="amount" type="text" class="spay-input pure-input" placeholder="123.45" />
+            <button id="butAmount" tabindex="-1" class="spay-clear button-red pure-button">x</button>
+            <label for="currency">Currency</label>
+            <input id="currency" type="text" class="spay-input pure-input" placeholder="CZK" />
+            <button id="butCurrency" tabindex="-1" class="spay-clear button-red pure-button">x</button>
+            <label for="vs">VS</label>
+            <input id="vs" type="text" class="spay-input pure-input" placeholder="1234567890" />
+            <button id="butVs" tabindex="-1" class="spay-clear button-red pure-button">x</button>
+            <label for="ks">KS</label>
+            <input id="ks" type="text" class="spay-input pure-input" placeholder="1234" />
+            <button id="butKs" tabindex="-1" class="spay-clear button-red pure-button">x</button>
+            <label for="ss">SS</label>
+            <input id="ss" type="text" class="spay-input pure-input" placeholder="1234567890" />
+            <button id="butSs" tabindex="-1" class="spay-clear button-red pure-button">x</button>
+            <label for="message">Message</label>
+            <input id="message" type="text" class="spay-input pure-input" placeholder="Payment for..." />
+            <button id="butMessage" tabindex="-1" class="spay-clear button-red pure-button">x</button>
+          </div>
+        </fieldset>
+        <!-- <input id="imgfile" style="display: flex;" type="file" class="pure-input-1" accept="image/*" /> -->
+        <!-- <button id="butShowQR" class="button-blue pure-button">Show QR</button> -->
+        <br />
+        <img id="imgPreview" />
+      </form>
+    </div>
+    <div id="saved-data"></div>
+  </main>
+  <div id="notif-cont">
+    <div id="notif">notifications should come here</div>
+  </div>
+  <div id="overlay">
+    <div id="mid-div">
+      <div id="QRImgDiv"></div>
+      <div id="QRValDiv"></div>
+    </div>
+  </div>
+  <div id="overlay2">
+    <div id="mid-div">
+      <div id="QRCamDiv"></div>
+    </div>
+  </div>
+  <script src="js/html5-qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.2/base64.min.js"></script>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <script src="js/spayd.umd.min.js"></script>
+  <script type="module" src="js/mqtt_connect.js"></script>
+  <script type="module">
+    // import QrCode from "https://danielgjackson.github.io/qrcodejs/qrcode.mjs";
+    import QrCode from "./js/qrcode.mjs";
+    window.makeQRSVG = (data) => {
+      const matrix = QrCode.generate(data);
+      const svg = QrCode.render("svg", matrix);
+      let svgLines = svg.split(/\r?\n/);
+      // remove comment line from generated svg, ugly hack
+      svgLines = svgLines.slice(1);
+      const svgPatched = svgLines.join("\n");
+      return svgPatched;
+    };
+  </script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>

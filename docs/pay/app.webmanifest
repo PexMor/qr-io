@@ -1,18 +1,18 @@
 {
-  "name": "QR i/o",
-  "short_name": "QR i/o",
-  "description": "QR: read, write and share",
+  "name": "Payment QR",
+  "short_name": "Pay QR",
+  "description": "Payment QR Code Scanner",
   "start_url": ".",
-  "id": "qr-io",
+  "id": "pay-qr",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#eeeeee",
+  "theme_color": "#eeeeee",
   "orientation": "portrait-primary",
   "lang": "en",
   "icons": [
     {
       "src": "images/icon.png",
-      "sizes": "280x280",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }

@@ -1,99 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="apple-touch-icon" href="docs/images/icon.png" />
-    <link rel="icon" type="image/png" href="docs/images/icon.png" />
-    <meta name="theme-color" content="#DD5939" />
-    <meta name="description" content="QR code read, write and share" />
-    <title>Server QR i/o</title>
-    <link rel="stylesheet" href="docs/style.css" />
-    <link
-      rel="stylesheet"
-      href="//cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
-      integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <header>
-      <h1 id="label">Server QR i/o</h1>
-    </header>
-    <main>
-      <div id="buttons">
-        <div id="dialog" style="border: 1px dotted gray"></div>
-        <h2>PWA Application</h2>
-        <div>
-          This is the mobile targeted application, it relies the data scanned
-          (if configured)
-          <br />
-          <button id="butShowPwaQR">Toogle QR</button>
-          <div id="qrApp" style="display: none"></div>
-        </div>
-        <hr />
-        <h3>Websocket Config</h3>
-        <div>
-          Configures the PWA to send data using <b>JSON</b> sent over
-          <b>Websocket</b> to this server.
-          <br />
-          <button id="butShowWSQR">Toogle QR</button>
-          <div id="qrConfigWS" style="display: none"></div>
-        </div>
-        <h3>HTTP POST Config</h3>
-        <div>
-          Configures the PWA to send data using <b>JSON</b> sent over
-          <b>HTTP POST</b> to this server.
-          <br />
-          <button id="butShowPostQR">Toogle QR</button>
-          <div id="qrConfigPost" style="display: none"></div>
-        </div>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" href="docs/images/icon.png" />
+  <link rel="icon" type="image/png" href="docs/images/icon.png" />
+  <meta name="theme-color" content="#DD5939" />
+  <meta name="description" content="QR code read, write and share" />
+  <title>Server QR I/O</title>
+  <link rel="stylesheet" href="docs/style.css" />
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+    integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous" />
+</head>
+
+<body>
+  <header>
+    <h1 id="label">Server QR I/O</h1>
+  </header>
+  <main>
+    <div id="buttons">
+      <div id="dialog" style="border: 1px dotted gray"></div>
+      <h2>PWA Application</h2>
+      <div>
+        This is the mobile targeted application, it relies the data scanned
+        (if configured)
+        <br />
+        <button id="butShowPwaQR">Toogle QR</button>
+        <div id="qrApp" style="display: none"></div>
       </div>
-    </main>
-    <div id="notif-cont">
-      <div id="notif">notifications should come here</div>
-    </div>
-    <div id="overlay">
-      <div id="mid-div">
-        <div id="QRCamDiv"></div>
-        <div id="QRImgDiv"></div>
-        <div id="QRValDiv"></div>
+      <hr />
+      <h3>Websocket Config</h3>
+      <div>
+        Configures the PWA to send data using <b>JSON</b> sent over
+        <b>Websocket</b> to this server.
+        <br />
+        <button id="butShowWSQR">Toogle QR</button>
+        <div id="qrConfigWS" style="display: none"></div>
+      </div>
+      <h3>HTTP POST Config</h3>
+      <div>
+        Configures the PWA to send data using <b>JSON</b> sent over
+        <b>HTTP POST</b> to this server.
+        <br />
+        <button id="butShowPostQR">Toogle QR</button>
+        <div id="qrConfigPost" style="display: none"></div>
       </div>
     </div>
-    <script src="docs/html5-qrcode.min.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.2/base64.min.js"></script> -->
-    <script type="module">
-      import QrCode from "https://danielgjackson.github.io/qrcodejs/qrcode.mjs";
-      window.makeQRSVG = (data) => {
-        const matrix = QrCode.generate(data);
-        const svg = QrCode.render("svg", matrix);
-        let svgLines = svg.split(/\r?\n/);
-        // remove comment line from generated svg, ugly hack
-        svgLines = svgLines.slice(1);
-        const svgPatched = svgLines.join("\n");
-        return svgPatched;
-      };
-      const jstrWS = `{{cfgWS}}`;
-      console.log(jstrWS);
-      window.configDataWS = {};
-      try {
-        const cd = JSON.parse(jstrWS);
-        window.configDataWS = cd;
-      } catch (err) {
-        console.error(err.message);
-      }
-      console.log(window.configDataWS);
-      const jstrPost = `{{cfgPost}}`;
-      console.log(jstrWS);
-      window.configDataPost = {};
-      try {
-        const cd = JSON.parse(jstrPost);
-        window.configDataPost = cd;
-      } catch (err) {
-        console.error(err.message);
-      }
-      console.log(window.configDataPost);
-    </script>
-    <script src="js/script.js"></script>
-  </body>
+  </main>
+  <div id="notif-cont">
+    <div id="notif">notifications should come here</div>
+  </div>
+  <div id="overlay">
+    <div id="mid-div">
+      <div id="QRCamDiv"></div>
+      <div id="QRImgDiv"></div>
+      <div id="QRValDiv"></div>
+    </div>
+  </div>
+  <script src="docs/html5-qrcode.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.2/base64.min.js"></script> -->
+  <script type="module">
+    import QrCode from "https://danielgjackson.github.io/qrcodejs/qrcode.mjs";
+    window.makeQRSVG = (data) => {
+      const matrix = QrCode.generate(data);
+      const svg = QrCode.render("svg", matrix);
+      let svgLines = svg.split(/\r?\n/);
+      // remove comment line from generated svg, ugly hack
+      svgLines = svgLines.slice(1);
+      const svgPatched = svgLines.join("\n");
+      return svgPatched;
+    };
+    const jstrWS = `{{cfgWS}}`;
+    console.log(jstrWS);
+    window.configDataWS = {};
+    try {
+      const cd = JSON.parse(jstrWS);
+      window.configDataWS = cd;
+    } catch (err) {
+      console.error(err.message);
+    }
+    console.log(window.configDataWS);
+    const jstrPost = `{{cfgPost}}`;
+    console.log(jstrWS);
+    window.configDataPost = {};
+    try {
+      const cd = JSON.parse(jstrPost);
+      window.configDataPost = cd;
+    } catch (err) {
+      console.error(err.message);
+    }
+    console.log(window.configDataPost);
+  </script>
+  <script src="js/script.js"></script>
+</body>
+
 </html>
